@@ -1,0 +1,4 @@
+# Redirects from what the browser requests to what we serve
+/pages/auth/resetPwd email=:email code=:code               /pages/auth/resetPwd?email=:email&code=:code 301
+/pages/auth/unlockUser email=:email code=:code             /pages/auth/unlockUser?email=:email&code=:code 301
+/*		/app/file-manager	200
