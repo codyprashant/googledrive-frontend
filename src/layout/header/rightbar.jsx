@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import {  LogIn, User } from 'react-feather';
+import {  LogIn } from 'react-feather';
 import { useHistory } from 'react-router-dom'
 import { setDefaultLanguage,  setLanguageCookie,  translate,} from 'react-switch-lang';
-import {Account,LogOut} from '../../constant'
+import {LogOut} from '../../constant'
 
 setDefaultLanguage('en');
 setLanguageCookie();
@@ -38,7 +38,7 @@ const Rightbar = (props) => {
               </div>
             </div>
             <ul className="profile-dropdown onhover-show-div">
-              <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/users/userProfile`)}><User /><span>{Account} </span></li>
+              {/* <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/users/userProfile`)}><User /><span>{Account} </span></li> */}
               <li onClick={() => Logout()}><LogIn /><span>{LogOut}</span></li>
             </ul>
           </li>
