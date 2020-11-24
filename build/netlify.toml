@@ -1,0 +1,6 @@
+[[redirects]]
+  from = "/pages/auth/unlockUser"
+  to = "/pages/auth/unlockUser"
+  status = 200
+  force = false
+  query = {email = ":email", code = ":code"} # apply this rule for /?path=example
