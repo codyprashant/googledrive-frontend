@@ -61,7 +61,7 @@ export const resetpassword = async (email, password) => {
 
     let postData = { email: email, password:password};
     console.log(postData)
-    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/resetRequest", postData)
+    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/resetPassword", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     console.log(resetReq)

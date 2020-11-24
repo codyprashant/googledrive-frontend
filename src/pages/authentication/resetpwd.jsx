@@ -75,7 +75,7 @@ render(){
                 <div><a className="logo" href="#javascript"><img className="img-fluid for-light" src={require("../../assets/images/logo/login.png")} alt="looginpage"/><img className="img-fluid for-dark" src={require("../../assets/images/logo/logo_dark.png")} alt="looginpage"/></a></div>
                 {this.state.emailVerified === true ?
                 <div className="login-main"> 
-                  <Form className="theme-form" onSubmit={this.onSubmitHandler}>
+                  <Form className="theme-form" onSubmit={(e) =>this.onSubmitHandler(e)}>
                     <h4>{"Create Your Password"}</h4>
                     <FormGroup>
                       <Label className="col-form-label">{NewPassword}</Label>

@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input
 import { Upload, PlusSquare } from 'react-feather';
 import { toast } from 'react-toastify'
 import errorImg from '../../../assets/images/search-not-found.png';
-import {AllFiles,RecentlyOpenedFiles,Folders,EndlessAdmin,Files,AddNew, AddFolder} from '../../../constant'
+import {AllFiles,AddNew, AddFolder} from '../../../constant'
 import {uploadFile, fetchAllFiles, createFolder} from '../../../Actions/Filemanager'
 
 const Filemanager = (props) => {

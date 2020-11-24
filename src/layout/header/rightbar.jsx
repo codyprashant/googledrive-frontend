@@ -22,10 +22,6 @@ const Rightbar = (props) => {
     history.push(`${process.env.PUBLIC_URL}/login`)
   }
 
-  const UserMenuRedirect = (redirect) => {
-    history.push(redirect)
-  }
-
   return (
     <Fragment>
       <div className="nav-right col-8 pull-right right-header p-0">
