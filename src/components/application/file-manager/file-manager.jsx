@@ -3,8 +3,9 @@ import Breadcrumb from '../../../layout/breadcrumb'
 import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Modal, Button,ModalHeader,ModalBody,Label,ModalFooter } from 'reactstrap'
 import { Upload, PlusSquare } from 'react-feather';
 import { toast } from 'react-toastify'
+import Dropzone from 'react-dropzone-uploader';
 import errorImg from '../../../assets/images/search-not-found.png';
-import {AllFiles,AddNew, AddFolder} from '../../../constant'
+import {AllFiles,AddNew, AddFolder,SingleFileUpload} from '../../../constant'
 import {uploadFile, fetchAllFiles, createFolder} from '../../../Actions/Filemanager'
 
 const Filemanager = (props) => {
@@ -12,10 +13,10 @@ const Filemanager = (props) => {
   const [selectedFile, setSelectedFile] = useState(null)   // Initially, no file is selected  
   const [searchTerm, setSearchTerm] = useState("");
   const [folderName, setfolderName] = useState("");
-  
   const [myfile, setMyFile] = useState([])
   const [VaryingContentthree, setVaryingContentthree] = useState(false);
   const VaryingContentthreetoggle = () => setVaryingContentthree(!VaryingContentthree);
+  const [selectedDropFile, setSelectedDropFile] = useState(null) 
 
   useEffect(() => {
      getAllData () 
@@ -120,13 +121,36 @@ const Filemanager = (props) => {
     setSelectedFile(event.target.files[0]);
   };
 
+  const onDropFileChange =  ({ file }, status) => {
+    // Update the state 
+
+    setSelectedDropFile(file);
+  };
+
+  const handleSubmit = async (files, allFiles) => {
+     allFiles.forEach(f => f.remove())
+      if (selectedDropFile !== null) {
+       const data = new FormData();
+       data.append('file', selectedDropFile);
+       let response = await uploadFile( data);
+       if(response.status === 'SUCCESS'){
+         
+         setMyFile(response.data);
+         toast.success("File Upload Successfully !")
+       }
+       else{
+         toast.error("Something Went wrong")
+       }
+     } else{
+       toast.error("Plese Select at least one file !")
+     }
+}
+
   const onFileUpload = async () => {
-    console.log(selectedFile)
     if (selectedFile !== null) {
     const data = new FormData();
     data.append('file', selectedFile);
     let response = await uploadFile( data);
-    console.log(response)
     if(response.status === 'SUCCESS'){
       setMyFile(response.data);
       toast.success("File Upload Successfully !")
@@ -200,6 +224,23 @@ const Filemanager = (props) => {
                     </div>
                   </div>
                 </CardHeader>
+                <Card>
+                            
+                            <CardBody>
+                                <Form>
+                                    <div className="dz-message needsclick">
+                                       <Dropzone
+                                            onChangeStatus={onDropFileChange}
+                                            onSubmit={handleSubmit}
+                                            maxFiles={1}
+                                            inputContent="Drop or drop Files"
+                                            inputWithFilesContent={"Drag or Drop a file"}
+                                            
+                                        />
+                                    </div>
+                                </Form>
+                            </CardBody>
+                        </Card>
                 {filelist.length > 0 ?
 
                   <CardBody className="file-manager">
