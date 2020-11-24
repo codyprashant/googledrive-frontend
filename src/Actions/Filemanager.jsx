@@ -15,7 +15,7 @@ axios.interceptors.request.use(
 export const uploadFile = async (data) => {
 
     let postData = data;
-    const uploadFileOutput = await axios.post("http://localhost:7227/drive/uploadSingleFile", postData)
+    const uploadFileOutput = await axios.post("https://drivecloneapp.herokuapp.com/drive/uploadSingleFile", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     console.log(uploadFileOutput)
@@ -29,7 +29,7 @@ export const uploadFile = async (data) => {
 
 export const fetchAllFiles = async () => {
 
-    const allFileOutput = await axios.get("http://localhost:7227/drive/getAllFiles")
+    const allFileOutput = await axios.get("https://drivecloneapp.herokuapp.com/drive/getAllFiles")
     .catch(err => {return {status: 'ERROR'}})
 
     console.log(allFileOutput)
@@ -43,7 +43,7 @@ export const fetchAllFiles = async () => {
 
 export const createFolder = async () => {
 
-    const folder = await axios.get("http://localhost:7227/drive/createFolder")
+    const folder = await axios.get("https://drivecloneapp.herokuapp.com/drive/createFolder")
     .catch(err => {return {status: 'ERROR'}})
 
     console.log(folder)

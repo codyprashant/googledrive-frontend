@@ -4,7 +4,7 @@ export const signUp = async (email, password, firstName, lastName) => {
 
     let postData = { email: email, password:password, firstName:firstName, lastName:lastName};
     console.log(postData)
-    const signupUser = await axios.post("http://localhost:7227/register", postData)
+    const signupUser = await axios.post("https://drivecloneapp.herokuapp.com/register", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(signupUser)
@@ -18,7 +18,7 @@ export const signUp = async (email, password, firstName, lastName) => {
 export const login = async (email, password) => {
 
     let postData = { email: email, password:password};
-    const loginUser = await axios.post("http://localhost:7227/login", postData)
+    const loginUser = await axios.post("https://drivecloneapp.herokuapp.com/login", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(loginUser)
@@ -32,7 +32,7 @@ export const login = async (email, password) => {
 export const verifyAccount = async (email, code) => {
 
     let postData = { email: email, code:code};
-    const verifyOutput = await axios.post("http://localhost:7227/verifyaccount", postData)
+    const verifyOutput = await axios.post("https://drivecloneapp.herokuapp.com/verifyaccount", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(verifyOutput)
@@ -46,7 +46,7 @@ export const verifyAccount = async (email, code) => {
 export const resetpassRequest = async (email) => {
 
     let postData = { email: email};
-    const resetReq = await axios.post("http://localhost:7227/resetRequest", postData)
+    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/resetRequest", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(resetReq)
@@ -61,7 +61,7 @@ export const resetpassword = async (email, password) => {
 
     let postData = { email: email, password:password};
     console.log(postData)
-    const resetReq = await axios.post("http://localhost:7227/resetRequest", postData)
+    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/resetRequest", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     console.log(resetReq)
@@ -76,7 +76,7 @@ export const verifyResetRequest = async (email, code) => {
 
     let postData = { email: email, code:code};
     console.log(postData)
-    const resetReq = await axios.post("http://localhost:7227/passwordRequestVerify", postData)
+    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/passwordRequestVerify", postData)
     .catch(err => {return {status: 'ERROR'}})
 
     console.log(resetReq)

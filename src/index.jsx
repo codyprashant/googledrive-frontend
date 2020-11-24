@@ -1,10 +1,9 @@
+
 import React, { Fragment,useState,useEffect } from 'react'
 import ReactDOM from 'react-dom';
 import './index.scss';
 import {BrowserRouter,Switch,Route,Redirect} from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
-import { Provider } from 'react-redux';
-import store from './store'
 import App from './components/app'
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
 import {routes} from './route';
@@ -70,7 +69,7 @@ const Root = (props) =>  {
           <Route  path={`/pages/maintenance`} component={Maintenance}></Route>
           
           <Route  path={`/callback`} render={() => <Callback/>} />
-          {jwt_token !==  null  ?
+          {(jwt_token !==  null)  ?
           
           <App>
             <Route exact path={`/`} render={() => {
@@ -78,7 +77,7 @@ const Root = (props) =>  {
             }} /> 
           <TransitionGroup>
               {routes.map(({ path, Component }) => (
-                <Route key={path}  exact  path={`${path}`}>
+                <Route key={path}  path={`${path}`}>
                     {({ match }) => (
                         <CSSTransition 
                           in={match != null}
@@ -90,7 +89,6 @@ const Root = (props) =>  {
                 </Route>
                 ))}
           </TransitionGroup> 
-          
           </App>
           :
           <Redirect to={`${process.env.PUBLIC_URL}/login`} />
