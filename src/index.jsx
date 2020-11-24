@@ -27,7 +27,7 @@ import Error503 from "./pages/errors/error503"
 
 // Maintenanc
 import Maintenance from "./pages/maintenance"
-import Callback from './auth/callback'
+
 
 const Root = (props) =>  {
   const abortController = new AbortController();
@@ -67,10 +67,7 @@ const Root = (props) =>  {
           <Route  path={`/pages/errors/error503`} component={Error503}></Route>
           
           <Route  path={`/pages/maintenance`} component={Maintenance}></Route>
-          
-          <Route  path={`/callback`} render={() => <Callback/>} />
           {(jwt_token !==  null)  ?
-          
           <App>
             <Route exact path={`/`} render={() => {
               return (<Redirect to={`/app/file-manager`} />)

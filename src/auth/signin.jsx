@@ -58,7 +58,7 @@ const Logins = (props) => {
             <div className="login-card">
             <div>
                 <div>
-                    <a className="logo text-left" href="#javascript">
+                    <a className="logo" href="#javascript">
                     <img className="img-fluid for-light" src={require("../assets/images/logo/login.png")} alt="looginpage"/>
                     <img className="img-fluid for-dark" src={require("../assets/images/logo/logo_dark.png")} alt="looginpage"/></a>
                 </div>

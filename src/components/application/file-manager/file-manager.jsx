@@ -163,12 +163,7 @@ const Filemanager = (props) => {
   }
   }
 
-
-
-
-
-
-  return (
+ return (
     <Fragment>
       <Breadcrumb parent="Apps" title="File Manager" />
       <Container fluid={true}>
