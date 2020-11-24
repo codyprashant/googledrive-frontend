@@ -3,6 +3,7 @@ import {Container,Row,Col} from 'reactstrap'
 import { SignIn} from "../../constant";
 import queryString from 'query-string';
 import {verifyAccount} from '../../Actions/AuthActions'
+import { ToastContainer,toast } from 'react-toastify';
 
 class UnlockUser extends React.Component {
   state={
@@ -47,6 +48,7 @@ class UnlockUser extends React.Component {
             </Col>
           </Row>
         </div>
+        <ToastContainer/>
         </Container>
     );
   }

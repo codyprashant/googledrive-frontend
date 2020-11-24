@@ -119,12 +119,14 @@ const Filemanager = (props) => {
   const onFileChange = event => {
     // Update the state 
     setSelectedFile(event.target.files[0]);
+    toast.info("File selected as queue. Please click on Upload button to save")
   };
 
   const onDropFileChange =  ({ file }, status) => {
     // Update the state 
 
     setSelectedDropFile(file);
+    toast.info("File selected as queue. Please click on Upload button to save")
   };
 
   const handleSubmit = async (files, allFiles) => {

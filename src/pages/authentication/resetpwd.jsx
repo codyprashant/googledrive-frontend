@@ -3,7 +3,7 @@ import queryString from 'query-string';
 import {Container,Row,Col,Form,FormGroup,Label,Input,Button} from 'reactstrap' 
 import { NewPassword,RetypePassword,Done, RememberPassword, CreateAccount,SignIn} from "../../constant";
 import {resetpassword, verifyResetRequest} from '../../Actions/AuthActions'
-import { toast } from 'react-toastify';
+import { ToastContainer,toast } from 'react-toastify';
 
   class Resetpwd extends React.Component {
     state={
@@ -108,6 +108,7 @@ render(){
             </div>
           </Col>
         </Row>
+        <ToastContainer/>
       </Container>
     );
 }
