@@ -21,11 +21,29 @@ import { toast } from 'react-toastify';
       } else if(e.target.name === 'newConfirmPassword'){
         this.setState({confirmPassword: e.target.value})
       }
-      console.log(this.state)
     }
 
     HideShowPassword  = (tPassword) => {
       this.setState({togglePassword: !tPassword})
+    }
+
+    async onSubmitHandler(e){
+      e.preventDefault();
+      console.log(this.state);
+      if(this.state.password === this.state.confirmPassword){
+        let response = await resetpassword(this.state.password, this.state.email);
+        if(response.status === 'SUCCESS' && response.message){
+          toast.success(response.message)
+          this.props.history.push('/login')
+        } else if(response.status === 'ERROR' && response.message){
+          toast.error(response.message)
+        }else{
+          toast.error('SOmething went wrong')
+        }
+      } else{
+        toast.error('SOmething went wrong')
+      }
+      
     }
 
     async componentDidMount(){
@@ -45,24 +63,7 @@ import { toast } from 'react-toastify';
       }
     }
 
-    async onSubmitHandler(e){
-      e.preventDefault();
-      console.log(this.state)
-      if(this.state.password === this.state.confirmPassword){
-        let response = await resetpassword(this.state.password, this.state.email);
-        if(response.status === 'SUCCESS' && response.message){
-          toast.success(response.message)
-          this.props.history.push('/login')
-        } else if(response.status === 'ERROR' && response.message){
-          toast.error(response.message)
-        }else{
-          toast.error('SOmething went wrong')
-        }
-      } else{
-        toast.error('SOmething went wrong')
-      }
-      
-    }
+    
 
 render(){
     return (
@@ -83,7 +84,7 @@ render(){
                     </FormGroup>
                     <FormGroup>
                       <Label className="col-form-label">{RetypePassword}</Label>
-                      <Input className="form-control" type="password" name="newConfirmPassword" required="" value={this.state.password} onChange={this.handleChange} placeholder="Confirm Password"/>
+                      <Input className="form-control" type="password" name="newConfirmPassword" required="" value={this.state.confirmPassword} onChange={this.handleChange} placeholder="Confirm Password"/>
                     </FormGroup>
                     <FormGroup className="mb-0">
                       <div className="checkbox ml-3">
