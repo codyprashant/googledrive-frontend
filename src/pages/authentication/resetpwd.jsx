@@ -4,9 +4,10 @@ import {Container,Row,Col,Form,FormGroup,Label,Input,Button} from 'reactstrap'
 import { NewPassword,RetypePassword,Done, RememberPassword, CreateAccount,SignIn} from "../../constant";
 import {resetpassword, verifyResetRequest} from '../../Actions/AuthActions'
 import { toast } from 'react-toastify';
-import {  useParams} from "react-router-dom";
+import { withRouter } from "react-router";
 
   class Resetpwd extends React.Component {
+
     state={
       togglePassword: false,
       password: '',
@@ -48,9 +49,7 @@ import {  useParams} from "react-router-dom";
     }
 
     async componentDidMount(){
-      // let url = this.props.location.search;
-      // let params = queryString.parse(url);
-      let { encryptedText } = useParams();
+      let {encryptedText}= this.props.match.params
       if(encryptedText){
         let response = await verifyResetRequest(encryptedText);
         if(response.status === 'SUCCESS' && response.message){
@@ -115,4 +114,4 @@ render(){
 }
 }
 
-export default Resetpwd;
+export default withRouter(Resetpwd);

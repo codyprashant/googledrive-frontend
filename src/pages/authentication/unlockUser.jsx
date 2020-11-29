@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container,Row,Col} from 'reactstrap'
 import { SignIn} from "../../constant";
-import {  useParams} from "react-router-dom";
+import { withRouter } from "react-router";
 import {verifyAccount} from '../../Actions/AuthActions'
 import { toast } from 'react-toastify';
 
@@ -12,9 +12,8 @@ class UnlockUser extends React.Component {
   }
 
   async componentDidMount(){
-    // let url = this.props.location.search;
-    // let params = queryString.parse(url);
-    let { encryptedText } = useParams();
+    console.log(this.props.match)
+    let {encryptedText}= this.props.match.params
     if(encryptedText){
       let response = await verifyAccount(encryptedText);
       if(response.status === 'SUCCESS' && response.message){
@@ -58,4 +57,4 @@ class UnlockUser extends React.Component {
   }
 }
 
-export default UnlockUser;
+export default withRouter(UnlockUser);
