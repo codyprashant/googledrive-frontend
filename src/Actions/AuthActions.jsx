@@ -1,4 +1,5 @@
 import axios from "axios"
+import { toast } from 'react-toastify';
 
 export const signUp = async (email, password, firstName, lastName) => {
 
@@ -19,19 +20,20 @@ export const login = async (email, password) => {
 
     let postData = { email: email, password:password};
     const loginUser = await axios.post("https://drivecloneapp.herokuapp.com/login", postData)
-    .catch(err => {return {status: 'ERROR'}})
+    .catch(err => {return {status: err}})
 
     // console.log(loginUser)
     if (loginUser.status === 200 || loginUser.data){
         return loginUser.data;
     } else{
+        toast.error('Invalid Username or Password')
         return {status: 'ERROR'}
     }
   }
 
-export const verifyAccount = async (email, code) => {
+export const verifyAccount = async (encryptedText) => {
 
-    let postData = { email: email, code:code};
+    let postData = { encryptedText:encryptedText};
     const verifyOutput = await axios.post("https://drivecloneapp.herokuapp.com/verifyaccount", postData)
     .catch(err => {return {status: 'ERROR'}})
 
@@ -57,14 +59,14 @@ export const resetpassRequest = async (email) => {
     }
 }
 
-export const resetpassword = async (email, password) => {
+export const resetpassword = async (encryptedText, password) => {
 
-    let postData = { email: email, password:password};
+    let postData = { encryptedText: encryptedText, password:password};
     console.log(postData)
     const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/resetPassword", postData)
     .catch(err => {return {status: 'ERROR'}})
 
-    console.log(resetReq)
+    // console.log(resetReq)
     if (resetReq.status === 200 || resetReq.data){
         return resetReq.data;
     } else{
@@ -72,14 +74,14 @@ export const resetpassword = async (email, password) => {
     }
 }
 
-export const verifyResetRequest = async (email, code) => {
+export const verifyResetRequest = async (encryptedText) => {
 
-    let postData = { email: email, code:code};
+    let postData = { encryptedText: encryptedText};
     console.log(postData)
     const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/passwordRequestVerify", postData)
     .catch(err => {return {status: 'ERROR'}})
 
-    console.log(resetReq)
+    // console.log(resetReq)
     if (resetReq.status === 200 || resetReq.data){
         return resetReq.data;
     } else{

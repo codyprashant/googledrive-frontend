@@ -4,7 +4,7 @@ import {Container,Row,Col,Form,FormGroup,Label,Input,Button} from 'reactstrap'
 import { Resend,ResetPassword, SignIn,Send} from "../../constant";
 import { useState } from 'react';
 import {resetpassRequest} from '../../Actions/AuthActions'
-import { ToastContainer,toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 const signInLink = `${process.env.PUBLIC_URL}/login`;
 
 const Forgetpwd = (props) => {
@@ -64,7 +64,6 @@ const Forgetpwd = (props) => {
             </div>
           </Col>
         </Row>
-        <ToastContainer/>
       </Container>
     );
 }

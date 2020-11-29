@@ -3,7 +3,7 @@ import { Link} from 'react-router-dom'
 import {Container,Row,Col,Form,FormGroup,Input,Label,Button} from 'reactstrap'
 import { Password,SignIn, EmailAddress ,CreateAccount, YourName} from '../../constant';
 import {signUp} from '../../Actions/AuthActions'
-import { ToastContainer,toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 const signInLink = `${process.env.PUBLIC_URL}/login`;
 
 
@@ -39,8 +39,6 @@ class Register extends React.Component {
       default:
         break;
     }
-    console.log(e.target.name)
-    console.log(e.target.value)
   }
 
   HideShowPassword  = (tPassword) => {
@@ -50,7 +48,6 @@ class Register extends React.Component {
   registerUser = async (e) => {
     e.preventDefault();
     let response = await signUp( this.state.email, this.state.password, this.state.Fname,this.state.Lname );
-    console.log(response);
     if (response.status && response.status === "SUCCESS") {
        toast.success(response.message);
       setTimeout(() => { toast.success(this.props.history.push(signInLink)); }, 200);
@@ -103,7 +100,6 @@ render(){
         </div>
       </Col>
     </Row>
-    <ToastContainer/>
     </Container>
   );
 }

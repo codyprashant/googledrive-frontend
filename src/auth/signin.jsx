@@ -39,6 +39,7 @@ const Logins = (props) => {
 
   const loginWithJwt = async (email,password) => {
       let response = await login( email, password );
+    //   console.log(response)
       if (response.status && response.status === "SUCCESS") {
           localStorage.setItem('token', response.token);
           localStorage.setItem('name', `${response.userData.Fname} ${response.userData.Lname}`);

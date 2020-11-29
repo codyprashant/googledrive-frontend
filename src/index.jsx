@@ -1,12 +1,11 @@
 
-import React, { Fragment,useState,useEffect } from 'react'
+import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom';
 import './index.scss';
 import {BrowserRouter,Switch,Route,Redirect} from 'react-router-dom'
 import * as serviceWorker from './serviceWorker';
-import App from './components/app'
-import { CSSTransition,TransitionGroup } from 'react-transition-group'
-import {routes} from './route';
+import {ToastContainer} from 'react-toastify'
+import PrivateRoute from './auth/PrivateRoute'
 
 
 // Signin page
@@ -27,69 +26,33 @@ import Error503 from "./pages/errors/error503"
 
 // Maintenanc
 import Maintenance from "./pages/maintenance"
-
+import FileManager from './components/application/file-manager/file-manager'
 
 const Root = (props) =>  {
-  const abortController = new AbortController();
-  const [authenticated,setAuthenticated] = useState(false)
-  const jwt_token = localStorage.getItem('token');
- 
-
-  useEffect(() => {
-      setAuthenticated(JSON.parse(localStorage.getItem("authenticated")))
-      
-      return function cleanup() {
-          abortController.abort();
-      }
-      
-      // eslint-disable-next-line 
-    }, []);
 
     return(
 
       <Fragment>
-
+        <ToastContainer/>
         <BrowserRouter basename={`/`}>
         <Switch>
+          <Route  exact path={`/login`} component={Signin} />
+          <Route  exact path={`/pages/auth/signup`} component={Register}></Route>
 
-          <Route  path={`/login`} component={Signin} />
-          <Route  path={`/pages/auth/signup`} component={Register}></Route>
+          <Route  exact path={`/pages/auth/forgetPwd`} component={Forgetpwd}></Route>
+          <Route  exact path={`/pages/auth/unlockUser/:encryptedText`} component={UnlockUser}></Route>
+          <Route  exact path={`/pages/auth/resetPwd/:encryptedText`} component={Resetpwd}></Route>
 
-          <Route  path={`/pages/auth/forgetPwd`} component={Forgetpwd}></Route>
-          <Route  path={`/pages/auth/unlockUser`} component={UnlockUser}></Route>
-          <Route  path={`/pages/auth/resetPwd`} component={Resetpwd}></Route>
-
-          <Route  path={`/pages/errors/error400`} component={Error400}></Route>
-          <Route  path={`/pages/errors/error401`} component={Error401}></Route>
-          <Route  path={`/pages/errors/error403`} component={Error403}></Route>
-          <Route  path={`/pages/errors/error404`} component={Error404}></Route>
-          <Route  path={`/pages/errors/error500`} component={Error500}></Route>
-          <Route  path={`/pages/errors/error503`} component={Error503}></Route>
+          <Route  exact path={`/pages/errors/error400`} component={Error400}></Route>
+          <Route  exact path={`/pages/errors/error401`} component={Error401}></Route>
+          <Route  exact path={`/pages/errors/error403`} component={Error403}></Route>
+          <Route  exact path={`/pages/errors/error404`} component={Error404}></Route>
+          <Route  exact path={`/pages/errors/error500`} component={Error500}></Route>
+          <Route  exact path={`/pages/errors/error503`} component={Error503}></Route>
           
-          <Route  path={`/pages/maintenance`} component={Maintenance}></Route>
-          {(jwt_token !==  null)  ?
-          <App>
-            <Route exact path={`/`} render={() => {
-              return (<Redirect to={`/app/file-manager`} />)
-            }} /> 
-          <TransitionGroup>
-              {routes.map(({ path, Component }) => (
-                <Route key={path}  path={`${path}`}>
-                    {({ match }) => (
-                        <CSSTransition 
-                          in={match != null}
-                          timeout={100}
-                           unmountOnExit>
-                          <div><Component/></div>
-                        </CSSTransition> 
-                    )}
-                </Route>
-                ))}
-          </TransitionGroup> 
-          </App>
-          :
-          <Redirect to={`${process.env.PUBLIC_URL}/login`} />
-          }      
+          <Route  exact path={`/pages/maintenance`} component={Maintenance}></Route>
+          <PrivateRoute exact path={`/app/file-manager`} component={FileManager}></PrivateRoute>
+          <Redirect from="/" to="/login" />
         </Switch>
         </BrowserRouter>
 

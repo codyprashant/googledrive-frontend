@@ -5,7 +5,7 @@ import { Upload, PlusSquare } from 'react-feather';
 import { toast } from 'react-toastify'
 import Dropzone from 'react-dropzone-uploader';
 import errorImg from '../../../assets/images/search-not-found.png';
-import {AllFiles,AddNew, AddFolder,SingleFileUpload} from '../../../constant'
+import {AllFiles,AddNew, AddFolder} from '../../../constant'
 import {uploadFile, fetchAllFiles, createFolder} from '../../../Actions/Filemanager'
 
 const Filemanager = (props) => {
@@ -25,7 +25,6 @@ const Filemanager = (props) => {
   async function getAllData () {
     const response = await fetchAllFiles();
     if(response.status === 'SUCCESS'){
-      console.log(response.data);
       setMyFile(response.data);
     } else{
       toast.error("Smething Went wrong")
@@ -40,7 +39,6 @@ const Filemanager = (props) => {
   const addFolder = async(e) =>{
     e.preventDefault();
     let response = await createFolder(folderName);
-    console.log(response);
     if(response.status === 'SUCCESS'){
       setMyFile(response.data);
       toast.success("File Upload Successfully !")
@@ -247,7 +245,12 @@ const Filemanager = (props) => {
                     </ul>
                   </CardBody>
                   :
-                  <img className="img-fluid m-auto" src={errorImg} alt="" />
+                  <CardBody className="file-manager m-auto">
+                    <img className="img-fluid m-auto" src={errorImg} alt="" />
+                     <h4 className="mb-3 text-center">No Files available...</h4>
+
+                </CardBody>
+  
                 }
               </Card>
             </div>

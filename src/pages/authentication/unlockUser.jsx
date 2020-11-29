@@ -1,9 +1,9 @@
 import React from 'react';
 import {Container,Row,Col} from 'reactstrap'
 import { SignIn} from "../../constant";
-import queryString from 'query-string';
+import {  useParams} from "react-router-dom";
 import {verifyAccount} from '../../Actions/AuthActions'
-import { ToastContainer,toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 class UnlockUser extends React.Component {
   state={
@@ -12,18 +12,23 @@ class UnlockUser extends React.Component {
   }
 
   async componentDidMount(){
-    let url = this.props.location.search;
-    let params = queryString.parse(url);
-    if(params.code && params.email){
-      let response = await verifyAccount(params.email, params.code);
+    // let url = this.props.location.search;
+    // let params = queryString.parse(url);
+    let { encryptedText } = useParams();
+    if(encryptedText){
+      let response = await verifyAccount(encryptedText);
       if(response.status === 'SUCCESS' && response.message){
+        toast.success('Account Verified Successfully')
         this.setState({title: response.message, description: 'Email Verification completed successfully and account has been activated.' })
       } else if(response.status === 'ERROR' && response.message){
+        toast.error('Invalid Request')
         this.setState({title: 'Invalid Request', description: `${response.message}` })
       }else{
+        toast.error('Invalid URL')
         this.setState({title: 'Invalid URL', description: 'Requested URL is invalid. Please reach out to admin, if you think its a mistake.' })
       }
     } else{
+      toast.error('Invalid URL')
       this.setState({title: 'Invalid URL', description: 'Requested URL is invalid. Please reach out to admin, if you think its a mistake.' })
     }
   }
@@ -48,7 +53,6 @@ class UnlockUser extends React.Component {
             </Col>
           </Row>
         </div>
-        <ToastContainer/>
         </Container>
     );
   }

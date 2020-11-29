@@ -1,9 +1,10 @@
 import React from 'react';
-import queryString from 'query-string';
+// import queryString from 'query-string';
 import {Container,Row,Col,Form,FormGroup,Label,Input,Button} from 'reactstrap' 
 import { NewPassword,RetypePassword,Done, RememberPassword, CreateAccount,SignIn} from "../../constant";
 import {resetpassword, verifyResetRequest} from '../../Actions/AuthActions'
-import { ToastContainer,toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import {  useParams} from "react-router-dom";
 
   class Resetpwd extends React.Component {
     state={
@@ -11,7 +12,7 @@ import { ToastContainer,toast } from 'react-toastify';
       password: '',
       confirmPassword:'',
       emailVerified: false,
-      email:''
+      encryptedTxt:''
     }
 
     handleChange = (e) => {
@@ -31,7 +32,7 @@ import { ToastContainer,toast } from 'react-toastify';
       e.preventDefault();
       console.log(this.state);
       if(this.state.password === this.state.confirmPassword){
-        let response = await resetpassword(this.state.password, this.state.email);
+        let response = await resetpassword(this.state.encryptedTxt, this.state.password);
         if(response.status === 'SUCCESS' && response.message){
           toast.success(response.message)
           this.props.history.push('/login')
@@ -47,12 +48,13 @@ import { ToastContainer,toast } from 'react-toastify';
     }
 
     async componentDidMount(){
-      let url = this.props.location.search;
-      let params = queryString.parse(url);
-      if(params.code && params.email){
-        let response = await verifyResetRequest(params.email, params.code);
+      // let url = this.props.location.search;
+      // let params = queryString.parse(url);
+      let { encryptedText } = useParams();
+      if(encryptedText){
+        let response = await verifyResetRequest(encryptedText);
         if(response.status === 'SUCCESS' && response.message){
-          this.setState({emailVerified: true, email: params.email })
+          this.setState({emailVerified: true, encryptedTxt:encryptedText })
         } else if(response.status === 'ERROR' && response.message){
           this.setState({emailVerified: false})
         }else{
@@ -108,7 +110,6 @@ render(){
             </div>
           </Col>
         </Row>
-        <ToastContainer/>
       </Container>
     );
 }
