@@ -13,10 +13,10 @@ const Checkout = (props) => {
   const [lastName, setlastName] = useState('') 
   const [receiveremail, setreceiveremail] = useState('') 
   const getUploadParams = ({ meta }) => { return { url: 'https://httpbin.org/post' } }
+
   const onDropFileChange =  ({ file }, status) => {
     setSelectedDropFile(file);
-    console.log(selectedDropFile)
-    toast.info("File selected as queue. Please click on Upload button to save")
+    // toast.info("File selected as queue. Please click on Upload button to save")
   };
 
 
@@ -24,6 +24,7 @@ const onSubmit = async (e) => {
     e.preventDefault();
     if (e !== "" && firstName !== "" && lastName !== "" && receiveremail !== "") {
       if (selectedDropFile !== null) {
+        if(selectedDropFile.size <3 ){
         const data = new FormData();
         data.append("file", selectedDropFile);
         data.append("firstName", firstName);
@@ -35,6 +36,9 @@ const onSubmit = async (e) => {
         } else {
           toast.error("Something Went wrong");
         }
+      }else{
+        toast.error("Select lesser size file");
+      }
       } else {
         toast.error("File not Selected");
       }

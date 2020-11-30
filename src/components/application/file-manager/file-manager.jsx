@@ -154,6 +154,7 @@ const Filemanager = (props) => {
 
   const onDropFileChange =  ({ file }, status) => {
     setSelectedDropFile(file);
+    console.log(status)
     toast.info("File selected as queue. Please click on Upload button to save")
   };
 
