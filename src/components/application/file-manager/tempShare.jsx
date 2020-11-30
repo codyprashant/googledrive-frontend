@@ -24,7 +24,7 @@ const onSubmit = async (e) => {
     e.preventDefault();
     if (e !== "" && firstName !== "" && lastName !== "" && receiveremail !== "") {
       if (selectedDropFile !== null) {
-        if(selectedDropFile.size <3 ){
+        if(selectedDropFile.size <5000000 ){
         const data = new FormData();
         data.append("file", selectedDropFile);
         data.append("firstName", firstName);
