@@ -50,3 +50,30 @@ export const createFolder = async () => {
          return {status: 'ERROR'}
      }
 }
+
+
+
+export const getDriveStats = async () => {
+
+    const driveSize = await axios.get("https://drivecloneapp.herokuapp.com/drive/gettotalStats")
+    .catch(err => {return {status: 'ERROR'}})
+     if (driveSize.status === 200 || driveSize.data){
+         return driveSize.data;
+     } else{
+         return {status: 'ERROR'}
+     }
+}
+
+
+export const deleteFile = async (itemId) => {
+    let postData = {itemId:itemId};
+    console.log(postData)
+    const deleteFileOutput = await axios.post("https://drivecloneapp.herokuapp.com/drive/deleteFile", postData)
+    .catch(err => {return {status: 'ERROR'}})
+    // console.log(deleteFileOutput)
+     if (deleteFileOutput.status === 200 || deleteFileOutput.data){
+         return deleteFileOutput.data;
+     } else{
+         return {status: 'ERROR'}
+     }
+}

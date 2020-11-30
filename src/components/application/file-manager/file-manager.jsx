@@ -1,12 +1,12 @@
 import React, { Fragment, useState,useEffect } from 'react';
 import Breadcrumb from '../../../layout/breadcrumb'
 import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Modal, Button,ModalHeader,ModalBody,Label,ModalFooter } from 'reactstrap'
-import { Upload, PlusSquare } from 'react-feather';
+import { Upload, PlusSquare, Download, Eye, Trash2 } from 'react-feather';
 import { toast } from 'react-toastify'
 import Dropzone from 'react-dropzone-uploader';
 import errorImg from '../../../assets/images/search-not-found.png';
-import {AllFiles,AddNew, AddFolder} from '../../../constant'
-import {uploadFile, fetchAllFiles, createFolder} from '../../../Actions/Filemanager'
+import {AllFiles,AddNew} from '../../../constant'
+import {uploadFile, fetchAllFiles, createFolder, deleteFile} from '../../../Actions/Filemanager'
 
 const Filemanager = (props) => {
 
@@ -17,6 +17,7 @@ const Filemanager = (props) => {
   const [VaryingContentthree, setVaryingContentthree] = useState(false);
   const VaryingContentthreetoggle = () => setVaryingContentthree(!VaryingContentthree);
   const [selectedDropFile, setSelectedDropFile] = useState(null) 
+  // const [selectedDeleteFile, setselectedDeleteFile] = useState([]) 
 
   useEffect(() => {
      getAllData () 
@@ -27,7 +28,7 @@ const Filemanager = (props) => {
     if(response.status === 'SUCCESS'){
       setMyFile(response.data);
     } else{
-      toast.error("Smething Went wrong")
+      toast.error("Something Went wrong")
     }
   }
 
@@ -88,6 +89,26 @@ const Filemanager = (props) => {
     }
   }
 
+  const deleteMarkedFile = async (itemId) => {
+    if(itemId){
+        let response = await deleteFile(itemId);
+        if(response.status === 'SUCCESS' && response.status){
+          setMyFile(response.data);
+          toast.success(`File deleted`);
+        } else{
+          toast.error(`File not deleted`);
+        }
+    } else{
+        toast.error(`Something went wrong. Please try again`);
+    }
+  }
+
+  const viewMarkedFile = (itemId) => {
+    if(itemId){
+      toast.success(`File view clicked`);
+    }
+  }
+
   // eslint-disable-next-line
   const filelist = myfile.filter((data) => {
     if(searchTerm == null)
@@ -98,13 +119,25 @@ const Filemanager = (props) => {
     }).map((data,i)=>{
       return(
         <li className="file-box" key={i}>
-          <div className="file-top"><i className={`fa ${getFontAwesomeIconFromMIME(data.fileType)}  txt-primary`} ></i><i className="fa fa-ellipsis-v f-14 ellips"></i></div>
+          <div className="file-top"><i className={`fa ${getFontAwesomeIconFromMIME(data.fileType)}  txt-primary`} ></i>
+          {/* <i className="fa fa-ellipsis-v f-14 ellips"  onClick={() => handleMarkedFile(data._id)}></i> */}
+          </div>
           <div className="file-bottom">
             <h6 style={{textOverflow:"ellipsis"}}>{(data.s3FileName).replace(`${data.userId}/uploads/`, '')} </h6>
             <p className="mb-1">{parseInt(data.fileSize)/1000 + 'kb'}</p>
-            <div className="text-right mt-1 mb-1">
-             <a className="btn-link text-danger" href={data.publicUrl}>Download File</a>
-              </div>
+            <Row>
+               <Col xl="8" md="8" className="box-col-12">
+                 <div className="text-left mt-1 mb-1">
+                   <Eye className="btn-link text-grey mr-2" size={15}  onClick={() => viewMarkedFile(data._id)}/>
+                   <Trash2 className="btn-link text-grey mr-2" size={15} onClick={() => deleteMarkedFile(data._id)}/>
+                 </div>
+               </Col>
+               <Col xl="4" md="4" className="box-col-12">
+                 <div className="text-right mt-1 mb-1">
+                   <a className="btn-link text-primary" href={data.publicUrl}><Download   size={15}/></a>
+                 </div>
+               </Col>
+            </Row>
           </div>
         </li>
       )
@@ -115,14 +148,11 @@ const Filemanager = (props) => {
   }
 
   const onFileChange = event => {
-    // Update the state 
     setSelectedFile(event.target.files[0]);
     toast.info("File selected as queue. Please click on Upload button to save")
   };
 
   const onDropFileChange =  ({ file }, status) => {
-    // Update the state 
-
     setSelectedDropFile(file);
     toast.info("File selected as queue. Please click on Upload button to save")
   };
@@ -208,7 +238,7 @@ const Filemanager = (props) => {
                     </Form>
                     <div className="media-body text-right">
                       <Form className="d-inline-flex">
-                      <div className="btn btn-primary mr-1" onClick={VaryingContentthreetoggle}> <PlusSquare />{AddFolder}</div>
+                      {/* <div className="btn btn-primary mr-1" onClick={VaryingContentthreetoggle}> <PlusSquare />{AddFolder}</div> */}
                         <div className="btn btn-primary" onClick={getFile}> <PlusSquare />{AddNew}</div>
                         <div style={{ height: "0px", width: "0px", overflow: "hidden" }}>
                           <input id="upfile" multiple type="file" onChange={(e) => onFileChange(e)} />
@@ -227,9 +257,10 @@ const Filemanager = (props) => {
                                        <Dropzone
                                             onChangeStatus={onDropFileChange}
                                             onSubmit={handleSubmit}
+                                            minFiles={1}
                                             maxFiles={1}
-                                            inputContent="Drop or drop Files"
-                                            inputWithFilesContent={"Drag or Drop a file"}
+                                            inputContent="Drop files here or click to upload"
+                                            inputWithFilesContent={"Drop files here or click to upload"}
                                             
                                         />
                                     </div>
@@ -248,7 +279,6 @@ const Filemanager = (props) => {
                   <CardBody className="file-manager m-auto">
                     <img className="img-fluid m-auto" src={errorImg} alt="" />
                      <h4 className="mb-3 text-center">No Files available...</h4>
-
                 </CardBody>
   
                 }

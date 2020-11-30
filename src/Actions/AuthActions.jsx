@@ -41,6 +41,7 @@ export const verifyAccount = async (encryptedText) => {
     if (verifyOutput.status === 200 || verifyOutput.data){
         return verifyOutput.data;
     } else{
+        console.log(verifyAccount)
         return {status: 'ERROR'}
     }
 }

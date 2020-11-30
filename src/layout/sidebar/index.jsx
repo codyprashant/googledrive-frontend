@@ -3,14 +3,16 @@ import { MENUITEMS } from './menu';
 import { ArrowRight, ArrowLeft, Grid } from 'react-feather';
 import { Link } from 'react-router-dom'
 import { translate } from 'react-switch-lang';
-
+import {  Row, Col, Card, CardBody } from 'reactstrap'
+import { getDriveStats } from '../../Actions/Filemanager'
 
 const Sidebar = (props) => {
 
   const [mainmenu, setMainMenu] = useState(MENUITEMS);
   const [margin, setMargin] = useState(0);
   const [width, setWidth] = useState(0);
-  const [sidebartoogle, setSidebartoogle] = useState(true)
+  const [sidebartoogle, setSidebartoogle] = useState(true);
+  const [sizeStats, setsizeStats] = useState({});
 
   useEffect(() => {
 
@@ -18,7 +20,7 @@ const Sidebar = (props) => {
 
     window.addEventListener('resize', handleResize)
     handleResize();
-
+    getDriveStatistics();
     const currentUrl = window.location.pathname;
     mainmenu.map(items => {
       items.Items.filter((Items) => {
@@ -51,6 +53,29 @@ const Sidebar = (props) => {
 
     // eslint-disable-next-line
   }, []);
+
+  const getDriveStatistics = async ()=>{
+    let response = await getDriveStats();
+    if(response.status === 'SUCCESS'){
+      setsizeStats({
+        size: convertsizetoMb(response.data.usedSpace), allocated: convertsizetoMb(response.data.allocated),
+        trash: convertsizetoMb(response.data.trash), tempSpace: convertsizetoMb(response.data.tempSpace),
+        tempAllocate: convertsizetoMb(response.data.tempAllocate), trashAllocate: convertsizetoMb(response.data.trashAllocate)
+      })
+    }
+    else{
+      setsizeStats({
+        size: convertsizetoMb(0), allocated: convertsizetoMb(50000000), trash: convertsizetoMb(0), tempSpace: convertsizetoMb(0)
+      })
+    }
+  }
+  const percentage = (num, per) =>{
+    return (num/per)*100;
+  }
+
+  const convertsizetoMb = (size) =>{
+    return ((parseInt(size)/1000000).toFixed(2));
+  }
 
   const handleResize = () => {
     setWidth(window.innerWidth - 500);
@@ -261,8 +286,74 @@ const Sidebar = (props) => {
                             </ul>
                             : ''}
                         </li>)}
+                        
                     </Fragment>
                   )}
+                  <li className="sidebar-list mt-3">
+                          <Card className="xs-none" style={{padding:"0px"}}>
+                            <CardBody className="ecommerce-widget"  style={{padding:"15px"}}>
+                              <Row>
+                                  <Col xs="12"><h6 className="total-num counter"> {"Drive Size"} </h6> </Col>
+                              </Row>
+                              <Row>
+                                  <Col xs="12"><span>{`${sizeStats.size} of ${sizeStats.allocated} MB used`}</span> </Col>
+                              </Row>
+                              <Row>
+                                  <Col xs="12">
+                                      <div className="progress-showcase" style={{marginTop:"15px"}}>
+                                        <div className="progress sm-progress-bar">
+                                          <div className="progress-bar bg-primary" role="progressbar" style={{ width: `${percentage(sizeStats.size, sizeStats.allocated )}%` }} aria-valuenow= {percentage(sizeStats.size, sizeStats.allocated )} aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </div>
+                                  </Col>
+                              </Row>
+                            </CardBody>
+                          </Card>
+                      </li>
+
+                      <li className="sidebar-list">
+                          <Card className="xs-none" style={{padding:"0px"}}>
+                            <CardBody className="ecommerce-widget"  style={{padding:"15px"}}>
+                              <Row>
+                                  <Col xs="12"><h6 className="total-num counter"> {"Trash"} </h6> </Col>
+                              </Row>
+                              <Row>
+                                  <Col xs="12"><span>{`${sizeStats.trash} of ${sizeStats.trashAllocate} MB used`}</span> </Col>
+                              </Row>
+                              <Row>
+                                  <Col xs="12">
+                                      <div className="progress-showcase" style={{marginTop:"15px"}}>
+                                        <div className="progress sm-progress-bar">
+                                          <div className="progress-bar bg-primary" role="progressbar" style={{ width: `${percentage(sizeStats.trash, sizeStats.trashAllocate )}%` }} aria-valuenow= {percentage(sizeStats.trash, sizeStats.trashAllocate )}aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </div>
+                                  </Col>
+                              </Row>
+                            </CardBody>
+                          </Card>
+                      </li>
+
+                      <li className="sidebar-list">
+                          <Card className="xs-none" style={{padding:"0px"}}>
+                            <CardBody className="ecommerce-widget"  style={{padding:"15px"}}>
+                              <Row>
+                                  <Col xs="12"><h6 className="total-num counter"> {"Temporary Share"} </h6> </Col>
+                              </Row>
+                              <Row>
+                                  <Col xs="12"><span>{`${sizeStats.tempSpace} of ${sizeStats.tempAllocate} MB used`}</span> </Col>
+                              </Row>
+                              <Row>
+                                  <Col xs="12">
+                                      <div className="progress-showcase" style={{marginTop:"15px"}}>
+                                        <div className="progress sm-progress-bar">
+                                          <div className="progress-bar bg-primary" role="progressbar" style={{ width: `${percentage(sizeStats.tempSpace, sizeStats.tempAllocate )}%` }} aria-valuenow={percentage(sizeStats.tempSpace, sizeStats.tempAllocate )} aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </div>
+                                  </Col>
+                              </Row>
+                            </CardBody>
+                          </Card>
+                      </li>
               </ul>
             </div>
             <div className="right-arrow" onClick={scrollToRight}><ArrowRight /></div>
@@ -271,5 +362,4 @@ const Sidebar = (props) => {
     </Fragment>
   );
 }
-
 export default translate(Sidebar);

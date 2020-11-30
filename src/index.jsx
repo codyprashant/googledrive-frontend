@@ -27,6 +27,10 @@ import Error503 from "./pages/errors/error503"
 // Maintenanc
 import Maintenance from "./pages/maintenance"
 import FileManager from './components/application/file-manager/file-manager'
+import TrashManager from './components/application/file-manager/trash-manager'
+import TempShare from './components/application/file-manager/tempShare'
+import TempShareHistory from './components/application/file-manager/tempShareHistory'
+import TempShareDrive from './components/application/file-manager/tempShareFiles'
 
 const Root = (props) =>  {
 
@@ -52,6 +56,10 @@ const Root = (props) =>  {
           
           <Route  exact path={`/pages/maintenance`} component={Maintenance}></Route>
           <PrivateRoute exact path={`/app/file-manager`} component={FileManager}></PrivateRoute>
+          <PrivateRoute exact path={`/app/trash`} component={TrashManager}></PrivateRoute>
+          <PrivateRoute exact path={`/app/tempShare`} component={TempShare}></PrivateRoute>
+          <PrivateRoute exact path={`/app/tempShareHistory`} component={TempShareHistory}></PrivateRoute>
+          <PrivateRoute exact path={`/app/tempShareDrive`} component={TempShareDrive}></PrivateRoute>
           <Redirect from="/" to="/login" />
         </Switch>
         </BrowserRouter>
