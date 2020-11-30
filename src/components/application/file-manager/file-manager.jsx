@@ -12,6 +12,7 @@ import {AllFiles
 } from '../../../constant'
 import SweetAlert from 'sweetalert2'
 import {uploadFile, fetchAllFiles, createFolder, deleteFile} from '../../../Actions/Filemanager'
+import  MyLoader  from '../../spinner/LoadingSpinner'
 
 const Filemanager = (props) => {
 
@@ -25,16 +26,20 @@ const Filemanager = (props) => {
   const [open, setOpen] = useState(false);
   const [selectedViewFile, setselectedViewFile] = useState([]) 
   const [selectedViewFileName, setselectedViewFileName] = useState('') 
+  const [isActive, setisActive] = useState(false);
 
   useEffect(() => {
      getAllData () 
   },[])
 
   async function getAllData () {
+    // setisActive(true)
     const response = await fetchAllFiles();
     if(response.status === 'SUCCESS'){
       setMyFile(response.data);
+      // setisActive(false)
     } else{
+      // setisActive(false)
       toast.error("Something Went wrong")
     }
   }
@@ -187,6 +192,7 @@ const Filemanager = (props) => {
   };
 
   const handleSubmit = async (files, allFiles) => {
+    setisActive(true)
      allFiles.forEach(f => f.remove())
       if (selectedDropFile !== null) {
         if(selectedDropFile.size <5000000 ){
@@ -196,16 +202,20 @@ const Filemanager = (props) => {
        if(response.status === 'SUCCESS'){
          
          setMyFile(response.data);
+         setisActive(false)
          toast.success("File Upload Successfully !")
        }
        else{
+        setisActive(false)
          toast.error("Something Went wrong")
        }
       }else{
+        setisActive(false)
         toast.error("Select lesser size file");
       }
      } else{
        toast.error("Plese Select at least one file !")
+       setisActive(false)
      }
 }
 
@@ -230,6 +240,7 @@ const Filemanager = (props) => {
  return (
     <Fragment>
       <Breadcrumb parent="Apps" title="File Manager" />
+      <MyLoader active={isActive}>
       <Container fluid={true}>
         <Row>
           
@@ -346,7 +357,7 @@ const Filemanager = (props) => {
           </Col>
         </Row>
       </Container>
-
+      </MyLoader>
     </Fragment>
   );
 }

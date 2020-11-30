@@ -11,21 +11,26 @@ import {
 
 import { toast } from "react-toastify";
 import { fetchAllFiles } from "../../../Actions/TempShare";
+import  MyLoader  from '../../spinner/LoadingSpinner'
 
 const TempShareHistory = (props) => {
 
     const [myfile, setMyFile] = useState([]);
+    const [isActive, setisActive] = useState(false);
 
     useEffect(() => {
         getAllData () 
      },[])
    
      async function getAllData () {
+      setisActive(true)
        const response = await fetchAllFiles();
        if(response.status === 'SUCCESS'){
          setMyFile(response.data);
+         setisActive(false)
        } else{
          toast.error("Something Went wrong")
+         setisActive(false)
        }
      }
 
@@ -66,6 +71,7 @@ const TempShareHistory = (props) => {
   return (
     <Fragment>
       <Breadcrumb parent="Apps" title="Share Files" />
+      <MyLoader active={isActive}>
       <Container fluid={true}>
         <Row>
           <Col xl="12">
@@ -109,6 +115,7 @@ const TempShareHistory = (props) => {
           </Col>
         </Row>
       </Container>
+      </MyLoader>
     </Fragment>
   );
 };
