@@ -1,11 +1,12 @@
 import axios from "axios"
 import { toast } from 'react-toastify';
+import {BACKEND_URL} from '../constant/serverDetails'
 
 export const signUp = async (email, password, firstName, lastName) => {
 
     let postData = { email: email, password:password, firstName:firstName, lastName:lastName};
     console.log(postData)
-    const signupUser = await axios.post("https://drivecloneapp.herokuapp.com/register", postData)
+    const signupUser = await axios.post(`${BACKEND_URL}/register`, postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(signupUser)
@@ -17,9 +18,10 @@ export const signUp = async (email, password, firstName, lastName) => {
 }
 
 export const login = async (email, password) => {
+    console.log(BACKEND_URL)
 
     let postData = { email: email, password:password};
-    const loginUser = await axios.post("https://drivecloneapp.herokuapp.com/login", postData)
+    const loginUser = await axios.post(`${BACKEND_URL}/login`, postData)
     .catch(err => {return {status: err}})
 
     // console.log(loginUser)
@@ -34,7 +36,7 @@ export const login = async (email, password) => {
 export const verifyAccount = async (encryptedText) => {
 
     let postData = { encryptedText:encryptedText};
-    const verifyOutput = await axios.post("https://drivecloneapp.herokuapp.com/verifyaccount", postData)
+    const verifyOutput = await axios.post(`${BACKEND_URL}/verifyaccount`, postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(verifyOutput)
@@ -49,7 +51,7 @@ export const verifyAccount = async (encryptedText) => {
 export const resetpassRequest = async (email) => {
 
     let postData = { email: email};
-    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/resetRequest", postData)
+    const resetReq = await axios.post(`${BACKEND_URL}/resetRequest`, postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(resetReq)
@@ -64,7 +66,7 @@ export const resetpassword = async (encryptedText, password) => {
 
     let postData = { encryptedText: encryptedText, password:password};
     console.log(postData)
-    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/resetPassword", postData)
+    const resetReq = await axios.post(`${BACKEND_URL}/resetPassword`, postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(resetReq)
@@ -79,7 +81,7 @@ export const verifyResetRequest = async (encryptedText) => {
 
     let postData = { encryptedText: encryptedText};
     console.log(postData)
-    const resetReq = await axios.post("https://drivecloneapp.herokuapp.com/passwordRequestVerify", postData)
+    const resetReq = await axios.post(`${BACKEND_URL}/passwordRequestVerify`, postData)
     .catch(err => {return {status: 'ERROR'}})
 
     // console.log(resetReq)

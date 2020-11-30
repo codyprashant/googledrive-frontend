@@ -1,11 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import Breadcrumb from '../../../layout/breadcrumb'
-import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Label, Button } from 'reactstrap'
+import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Label, Button, Spinner } from 'reactstrap'
 import { toast } from 'react-toastify';
 import Dropzone from 'react-dropzone-uploader';
 import {uploadFile} from '../../../Actions/TempShare'
+import {  useHistory } from 'react-router-dom'
 
 const Checkout = (props) => {
+  let history = useHistory();
 
 //   const { register, handleSubmit, errors } = useForm()
   const [selectedDropFile, setSelectedDropFile] = useState(null) 
@@ -13,15 +15,21 @@ const Checkout = (props) => {
   const [lastName, setlastName] = useState('') 
   const [receiveremail, setreceiveremail] = useState('') 
   const getUploadParams = ({ meta }) => { return { url: 'https://httpbin.org/post' } }
+  const [isLoading,setisLoading] = useState(false)
+  const [uploadingStatus,setisuploadingStatus] = useState(false)
 
   const onDropFileChange =  ({ file }, status) => {
     setSelectedDropFile(file);
-    if(status === 'done') toast.info("File selected as queue. Please click on Upload button to save")
+    if(status === 'done') {
+      setisuploadingStatus(true)
+      toast.info("File selected as queue. Please click on Send button when ready")
+    }
   };
 
 
 const onSubmit = async (e) => {
     e.preventDefault();
+    setisLoading(true)
     if (e !== "" && firstName !== "" && lastName !== "" && receiveremail !== "") {
       if (selectedDropFile !== null) {
         if(selectedDropFile.size <5000000 ){
@@ -33,17 +41,26 @@ const onSubmit = async (e) => {
         let response = await uploadFile(data);
         if (response.status === "SUCCESS") {
           toast.success("File Sent Successfully !");
+          history.push(`/app/tempShareHistory`)
         } else {
           toast.error("Something Went wrong");
+          setisuploadingStatus(false)
+          setisLoading(false)
         }
       }else{
         toast.error("Select lesser size file");
+        setisuploadingStatus(false)
+        setisLoading(false)
       }
       } else {
         toast.error("File not Selected");
+        setisuploadingStatus(false)
+        setisLoading(false)
       }
     } else {
         toast.error("Form is not filled");
+        setisLoading(false)
+        setisuploadingStatus(false)
     }
   };
 
@@ -92,8 +109,17 @@ const onSubmit = async (e) => {
                        </div>
                       
 
-                      <Button color="primary" type="submit" className="mt-2 pull-right">{'Send File'}</Button>
-
+                      {/* <Button color="primary" type="submit" className="mt-2 pull-right">{'Send File'}</Button> */}
+                      { isLoading ?             
+                          <Button color="primary" type="submit" className="mt-2 pull-right" disabled>
+                              Sending File <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                          </Button> : 
+                          (uploadingStatus ?
+                            <Button  color="primary" type="submit" className="mt-2 pull-right" >{'Send File'}</Button>
+                             : <Button  color="primary" type="submit" className="mt-2 pull-right" disabled>{'Send File'}</Button>
+                          
+                          )
+                        }
                     </Form>
                   </Col>
                   <Col xl="6" sm="12">

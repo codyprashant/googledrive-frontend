@@ -1,6 +1,6 @@
 import React from 'react';
 // import queryString from 'query-string';
-import {Container,Row,Col,Form,FormGroup,Label,Input,Button} from 'reactstrap' 
+import {Container,Row,Col,Form,FormGroup,Label,Input,Button, Spinner} from 'reactstrap' 
 import { NewPassword,RetypePassword,Done, RememberPassword, CreateAccount,SignIn} from "../../constant";
 import {resetpassword, verifyResetRequest} from '../../Actions/AuthActions'
 import { toast } from 'react-toastify';
@@ -13,7 +13,8 @@ import { withRouter } from "react-router";
       password: '',
       confirmPassword:'',
       emailVerified: false,
-      encryptedTxt:''
+      encryptedTxt:'',
+      isLoading: false
     }
 
     handleChange = (e) => {
@@ -31,7 +32,7 @@ import { withRouter } from "react-router";
 
     async onSubmitHandler(e){
       e.preventDefault();
-      console.log(this.state);
+      this.setState({ isLoading: true });
       if(this.state.password === this.state.confirmPassword){
         let response = await resetpassword(this.state.encryptedTxt, this.state.password);
         if(response.status === 'SUCCESS' && response.message){
@@ -39,11 +40,14 @@ import { withRouter } from "react-router";
           this.props.history.push('/login')
         } else if(response.status === 'ERROR' && response.message){
           toast.error(response.message)
+          this.setState({ isLoading: false });
         }else{
-          toast.error('SOmething went wrong')
+          toast.error('Something went wrong')
+          this.setState({ isLoading: false });
         }
       } else{
-        toast.error('SOmething went wrong')
+        toast.error('Something went wrong')
+        this.setState({ isLoading: false });
       }
       
     }
@@ -92,7 +96,13 @@ render(){
                         <Input id="checkbox1" type="checkbox"/>
                         <Label className="text-muted" for="checkbox1">{RememberPassword}</Label>
                       </div>
-                      <Button color="primary" className="btn-block" type="submit">{Done}</Button>
+                      {/* <Button color="primary" className="btn-block" type="submit">{Done}</Button> */}
+                      { this.state.isLoading ?             
+                        <Button  type="submit" color="primary" className="btn-block " disabled>
+                           Resetting Password <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                        </Button> : 
+                        <Button  type="submit" color="primary" className="btn-block " >{Done}</Button>
+                  }
                     </FormGroup>
                     <p className="mt-4 mb-0">{"Don't have account?"}<a className="ml-2" href="/pages/auth/signup">{CreateAccount}</a></p>
                   </Form>

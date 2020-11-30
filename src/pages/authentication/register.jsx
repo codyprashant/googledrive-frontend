@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link} from 'react-router-dom'
-import {Container,Row,Col,Form,FormGroup,Input,Label,Button} from 'reactstrap'
+import {Container,Row,Col,Form,FormGroup,Input,Label,Button, Spinner} from 'reactstrap'
 import { Password,SignIn, EmailAddress ,CreateAccount, YourName} from '../../constant';
 import {signUp} from '../../Actions/AuthActions'
 import { toast } from 'react-toastify';
@@ -13,7 +13,8 @@ class Register extends React.Component {
     password: '',
     email: '',
     Fname: '',
-    Lname: ''
+    Lname: '',
+    isLoading: false
   }
 
   handleChange = (e) => {
@@ -47,12 +48,14 @@ class Register extends React.Component {
 
   registerUser = async (e) => {
     e.preventDefault();
+    this.setState({ isLoading: true });
     let response = await signUp( this.state.email, this.state.password, this.state.Fname,this.state.Lname );
     if (response.status && response.status === "SUCCESS") {
        toast.success(response.message);
       setTimeout(() => { toast.success(this.props.history.push(signInLink)); }, 200);
     } else {
       toast.error(response.message); 
+      this.setState({ isLoading: false });
     }
   }
 
@@ -90,7 +93,13 @@ render(){
                 </FormGroup>
                 <div className="form-group mb-0">
                   <hr />
-                  <Button color="primary" className="btn-block" type="submit">{CreateAccount}</Button>
+                  {/* <Button color="primary" className="btn-block" type="submit">{CreateAccount}</Button> */}
+                  { this.state.isLoading ?             
+                    <Button  type="submit" color="primary" className="btn-block " disabled>
+                        Registering <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                    </Button> : 
+                    <Button  type="submit" color="primary" className="btn-block " >{CreateAccount}</Button>
+                  }
                 </div>
                 
                 <p className="mt-4 mb-0">{"Already have an account?   "}<Link to={signInLink}>{SignIn}</Link></p>

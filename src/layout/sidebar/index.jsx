@@ -56,6 +56,7 @@ const Sidebar = (props) => {
 
   const getDriveStatistics = async ()=>{
     let response = await getDriveStats();
+    // console.log(response)
     if(response.status === 'SUCCESS'){
       setsizeStats({
         size: convertsizetoMb(response.data.usedSpace), allocated: convertsizetoMb(response.data.allocated),
@@ -65,7 +66,8 @@ const Sidebar = (props) => {
     }
     else{
       setsizeStats({
-        size: convertsizetoMb(0), allocated: convertsizetoMb(50000000), trash: convertsizetoMb(0), tempSpace: convertsizetoMb(0)
+        size: convertsizetoMb(0), allocated: convertsizetoMb(50000000), trash: convertsizetoMb(0), tempSpace: convertsizetoMb(0),
+        tempAllocate: convertsizetoMb(200000000), trashAllocate: convertsizetoMb(10000000)
       })
     }
   }

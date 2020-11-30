@@ -1,11 +1,12 @@
 import React, { Fragment, useState,useEffect } from 'react';
 import Breadcrumb from '../../../layout/breadcrumb'
-import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Modal, Button,ModalHeader,ModalBody,Label,ModalFooter } from 'reactstrap'
+import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Modal, Button,ModalHeader,Media,ModalBody,Label,ModalFooter } from 'reactstrap'
 import { Upload, PlusSquare, Download, Eye, Trash2 } from 'react-feather';
 import { toast } from 'react-toastify'
 import Dropzone from 'react-dropzone-uploader';
 import errorImg from '../../../assets/images/search-not-found.png';
 import {AllFiles,AddNew} from '../../../constant'
+import SweetAlert from 'sweetalert2'
 import {uploadFile, fetchAllFiles, createFolder, deleteFile} from '../../../Actions/Filemanager'
 
 const Filemanager = (props) => {
@@ -16,8 +17,10 @@ const Filemanager = (props) => {
   const [myfile, setMyFile] = useState([])
   const [VaryingContentthree, setVaryingContentthree] = useState(false);
   const VaryingContentthreetoggle = () => setVaryingContentthree(!VaryingContentthree);
-  const [selectedDropFile, setSelectedDropFile] = useState(null) 
-  // const [selectedDeleteFile, setselectedDeleteFile] = useState([]) 
+  const [selectedDropFile, setSelectedDropFile] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [selectedViewFile, setselectedViewFile] = useState([]) 
+  const [selectedViewFileName, setselectedViewFileName] = useState('') 
 
   useEffect(() => {
      getAllData () 
@@ -103,11 +106,33 @@ const Filemanager = (props) => {
     }
   }
 
-  const viewMarkedFile = (itemId) => {
-    if(itemId){
-      toast.success(`File view clicked`);
-    }
-  }
+  // const viewMarkedFile = (itemId) => {
+  //   if(itemId){
+  //     toast.success(`File view clicked`);
+  //   }
+  // }
+
+  const onOpenModal = (fileId) => {
+    myfile.forEach((file, i) => {
+      if (file._id === fileId) {
+        if((file.fileType).includes('image')){
+          setOpen(true);
+            setselectedViewFileName((file.s3FileName).replace(`${file.userId}/uploads/`, ''))
+            setselectedViewFile(file)
+        } else{
+          SweetAlert.fire({
+            title: "File is not Image",
+            text: "Currently, we supports image view functionality only. Please click download icon and then view the file",
+            icon: "info",
+          });
+        }
+      }
+    })
+  };
+
+  const onCloseModal = () => {
+    setOpen(false)
+  };
 
   // eslint-disable-next-line
   const filelist = myfile.filter((data) => {
@@ -128,7 +153,7 @@ const Filemanager = (props) => {
             <Row>
                <Col xl="8" md="8" className="box-col-12">
                  <div className="text-left mt-1 mb-1">
-                   <Eye className="btn-link text-grey mr-2" size={15}  onClick={() => viewMarkedFile(data._id)}/>
+                   <Eye className="btn-link text-grey mr-2" size={15}  onClick={() => onOpenModal(data._id)}/>
                    <Trash2 className="btn-link text-grey mr-2" size={15} onClick={() => deleteMarkedFile(data._id)}/>
                  </div>
                </Col>
@@ -197,6 +222,7 @@ const Filemanager = (props) => {
   }
   }
 
+
  return (
     <Fragment>
       <Breadcrumb parent="Apps" title="File Manager" />
@@ -223,6 +249,24 @@ const Filemanager = (props) => {
                             <Button color="primary" onClick={VaryingContentthreetoggle}>Create</Button>
                       </ModalFooter>
                       </Form>
+                </Modal>
+
+                <Modal className="modal-lg modal-dialog-centered product-modal" isOpen={open}>
+                  <ModalBody>
+                    <ModalHeader toggle={onCloseModal}>
+                      <div className="product-box row">
+                        <Row>
+                            <Col lg="12" className="product-img">
+                              <Media className="img-fluid" src={selectedViewFile.publicUrl} alt="" />
+                            </Col>
+                     
+                            <Col lg="12" className=" mt-3">
+                                <h6>{selectedViewFileName} </h6>
+                            </Col>
+                        </Row>
+                      </div>
+                    </ModalHeader>
+                  </ModalBody>
                 </Modal>
            
 

@@ -1,4 +1,5 @@
 import axios from "axios"
+import {BACKEND_URL} from '../constant/serverDetails'
 
 axios.interceptors.request.use(
     config=> {
@@ -13,7 +14,7 @@ axios.interceptors.request.use(
 
 export const fetchAllFiles = async () => {
 
-    const allFileOutput = await axios.get("https://drivecloneapp.herokuapp.com/trash/getAllTrashFiles")
+    const allFileOutput = await axios.get(`${BACKEND_URL}/trash/getAllTrashFiles`)
     .catch(err => {return {status: 'ERROR'}})
 
      if (allFileOutput.status === 200 || allFileOutput.data){
@@ -26,7 +27,7 @@ export const fetchAllFiles = async () => {
 export const deleteFile = async (itemId) => {
     let postData = {itemId:itemId};
 
-    const deleteFileOutput = await axios.post("https://drivecloneapp.herokuapp.com/trash/deleteTrashFile", postData)
+    const deleteFileOutput = await axios.post(`${BACKEND_URL}/trash/deleteTrashFile`, postData)
     .catch(err => {return {status: 'ERROR'}})
     // console.log(deleteFileOutput)
      if (deleteFileOutput.status === 200 || deleteFileOutput.data){
@@ -39,7 +40,7 @@ export const deleteFile = async (itemId) => {
 export const restoreFile = async (itemId) => {
     let postData = {itemId:itemId};
 
-    const deleteFileOutput = await axios.post("https://drivecloneapp.herokuapp.com/trash/restoreFile", postData)
+    const deleteFileOutput = await axios.post(`${BACKEND_URL}/trash/restoreFile`, postData)
     .catch(err => {return {status: 'ERROR'}})
     // console.log(deleteFileOutput)
      if (deleteFileOutput.status === 200 || deleteFileOutput.data){

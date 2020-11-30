@@ -12,7 +12,7 @@ import {
 import { toast } from "react-toastify";
 import { fetchAllFiles } from "../../../Actions/TempShare";
 
-const Checkout = (props) => {
+const TempShareHistory = (props) => {
 
     const [myfile, setMyFile] = useState([]);
 
@@ -113,4 +113,4 @@ const Checkout = (props) => {
   );
 };
 
-export default Checkout;
+export default TempShareHistory;

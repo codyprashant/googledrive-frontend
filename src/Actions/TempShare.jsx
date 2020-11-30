@@ -1,4 +1,5 @@
 import axios from "axios"
+import {BACKEND_URL} from '../constant/serverDetails'
 
 axios.interceptors.request.use(
     config=> {
@@ -14,7 +15,7 @@ axios.interceptors.request.use(
 export const uploadFile = async (data) => {
 
     let postData = data;
-    const uploadFileOutput = await axios.post("https://drivecloneapp.herokuapp.com/share/uploadSharingFile", postData)
+    const uploadFileOutput = await axios.post(`${BACKEND_URL}/share/uploadSharingFile`, postData)
     .catch(err => {return {status: 'ERROR'}})
 
 
@@ -27,7 +28,7 @@ export const uploadFile = async (data) => {
 
 export const fetchAllFiles = async () => {
 
-    const allFileOutput = await axios.get("https://drivecloneapp.herokuapp.com/share/getAllSharedFiles")
+    const allFileOutput = await axios.get(`${BACKEND_URL}/share/getAllSharedFiles`)
     .catch(err => {return {status: 'ERROR'}})
 
 

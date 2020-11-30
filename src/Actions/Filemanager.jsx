@@ -1,4 +1,5 @@
 import axios from "axios"
+import {BACKEND_URL} from '../constant/serverDetails'
 
 axios.interceptors.request.use(
     config=> {
@@ -14,7 +15,7 @@ axios.interceptors.request.use(
 export const uploadFile = async (data) => {
 
     let postData = data;
-    const uploadFileOutput = await axios.post("https://drivecloneapp.herokuapp.com/drive/uploadSingleFile", postData)
+    const uploadFileOutput = await axios.post(`${BACKEND_URL}/drive/uploadSingleFile`, postData)
     .catch(err => {return {status: 'ERROR'}})
 
 
@@ -27,7 +28,7 @@ export const uploadFile = async (data) => {
 
 export const fetchAllFiles = async () => {
 
-    const allFileOutput = await axios.get("https://drivecloneapp.herokuapp.com/drive/getAllFiles")
+    const allFileOutput = await axios.get(`${BACKEND_URL}/drive/getAllFiles`)
     .catch(err => {return {status: 'ERROR'}})
 
 
@@ -40,7 +41,7 @@ export const fetchAllFiles = async () => {
 
 export const createFolder = async () => {
 
-    const folder = await axios.get("https://drivecloneapp.herokuapp.com/drive/createFolder")
+    const folder = await axios.get(`${BACKEND_URL}/drive/createFolder`)
     .catch(err => {return {status: 'ERROR'}})
 
 
@@ -55,7 +56,7 @@ export const createFolder = async () => {
 
 export const getDriveStats = async () => {
 
-    const driveSize = await axios.get("https://drivecloneapp.herokuapp.com/drive/gettotalStats")
+    const driveSize = await axios.get(`${BACKEND_URL}/drive/gettotalStats`)
     .catch(err => {return {status: 'ERROR'}})
      if (driveSize.status === 200 || driveSize.data){
          return driveSize.data;
@@ -68,7 +69,7 @@ export const getDriveStats = async () => {
 export const deleteFile = async (itemId) => {
     let postData = {itemId:itemId};
     console.log(postData)
-    const deleteFileOutput = await axios.post("https://drivecloneapp.herokuapp.com/drive/deleteFile", postData)
+    const deleteFileOutput = await axios.post(`${BACKEND_URL}/drive/deleteFile`, postData)
     .catch(err => {return {status: 'ERROR'}})
     // console.log(deleteFileOutput)
      if (deleteFileOutput.status === 200 || deleteFileOutput.data){

@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import { Link, useHistory } from 'react-router-dom'
-import { Container, Row, Col, Form, FormGroup, Input, Label, Button,FormFeedback} from 'reactstrap'
+import { Container, Row, Col, Form, FormGroup, Input, Label, Button,FormFeedback, Spinner} from 'reactstrap'
 import {login} from '../Actions/AuthActions'
 import {withRouter} from 'react-router-dom'
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ const Logins = (props) => {
     let history = useHistory();
     const [user,setUser] = useState({email:"",password:""})
     const [togglePassword,setTogglePassword] = useState(false)
+    const [isLoading,setisLoading] = useState(false)
 
     const handleChange = (e) => {
       const {name,value} = e.target
@@ -38,7 +39,10 @@ const Logins = (props) => {
 
 
   const loginWithJwt = async (email,password) => {
+      if(email !== '' && password !==''){
+        setisLoading(true)
       let response = await login( email, password );
+
     //   console.log(response)
       if (response.status && response.status === "SUCCESS") {
           localStorage.setItem('token', response.token);
@@ -48,10 +52,15 @@ const Logins = (props) => {
           history.push(`/app/file-manager`)
       } else{
           toast.error(response.message);
+          setisLoading(false)
       }
+    } else{
+        toast.error('Username and Password are compulsory fields')
+    }
   }
 
     return (
+        
       <Container fluid={true} className="p-0">
       <Row>
 
@@ -64,36 +73,39 @@ const Logins = (props) => {
                     <img className="img-fluid for-dark" src={require("../assets/images/logo/logo_dark.png")} alt="looginpage"/></a>
                 </div>
                 <div className="login-main login-tab">
-                        <Form className="theme-form">
-                            <h4>{"Sign In"}</h4>
-                            <p>{"Enter your email & password to login"}</p>
+                    <Form className="theme-form">
+                        <h4>{"Sign In"}</h4>
+                        <p>{"Enter your email & password to login"}</p>
                             
-                            <FormGroup>
-                                <Label className="col-form-label">{EmailAddress}</Label>
-                                <Input className="email_valid"  type="email" name="email" value={user.email} onChange={(e) => handleChange(e)} placeholder="Email Address" required/>
-                                <FormFeedback>{"Please enter proper email."}</FormFeedback>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label className="col-form-label">{Password}</Label>
-                                <Input className="password_valid"  type={togglePassword ?  "text" : "password" } name="password" value={user.password} onChange={(e) => handleChange(e)}  placeholder="Password" required/>
-                                <FormFeedback>{"Please enter password."}</FormFeedback>
-                                <div className="show-hide" onClick={() => HideShowPassword(togglePassword)}><span className={togglePassword ? "" : "show"}></span></div>
+                        <FormGroup>
+                            <Label className="col-form-label">{EmailAddress}</Label>
+                            <Input className="email_valid"  type="email" name="email" value={user.email} onChange={(e) => handleChange(e)} placeholder="Email Address" required/>
+                            <FormFeedback>{"Please enter proper email."}</FormFeedback>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label className="col-form-label">{Password}</Label>
+                            <Input className="password_valid"  type={togglePassword ?  "text" : "password" } name="password" value={user.password} onChange={(e) => handleChange(e)}  placeholder="Password" required/>
+                            <FormFeedback>{"Please enter password."}</FormFeedback>
+                            <div className="show-hide" onClick={() => HideShowPassword(togglePassword)}><span className={togglePassword ? "" : "show"}></span></div>
                                 
-                            </FormGroup>
-                            <FormGroup className="mb-0">
-                                <div className="checkbox ml-3">
-                                <Input id="checkbox1" type="checkbox"/>
-                                <Label className="text-muted" for="checkbox1">{RememberPassword}</Label>
-                                </div>
-                                <Link to={forgotPassLink}>{ForgotPassword}</Link>
-                                <br /> <br />
-                                <Button color="primary" className="btn-block"  onClick={() => loginWithJwt(user.email,user.password)}>{LoginWithJWT}</Button>
-                             
-                            </FormGroup>
-                            
-                            <p className="mt-4 mb-0">{"Don't have account?  "}<Link to={createAccountLink}>{CreateAccount}</Link></p>
-                            
-                        </Form>
+                        </FormGroup>
+                        <FormGroup className="mb-0">
+                            <div className="checkbox ml-3">
+                            <Input id="checkbox1" type="checkbox"/>
+                            <Label className="text-muted" for="checkbox1">{RememberPassword}</Label>
+                            </div>
+                            <Link to={forgotPassLink}>{ForgotPassword}</Link>
+                            <br /> <br />
+                            {/* <Button color="primary" className="btn-block"  onClick={() => loginWithJwt(user.email,user.password)}>{LoginWithJWT}</Button> */}
+                            { isLoading ?             
+                                <Button color="primary" className="btn-block" disabled>
+                                    Signing In <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                                </Button> : 
+                                <Button  color="primary" className="btn-block"  onClick={() => loginWithJwt(user.email,user.password)}>{LoginWithJWT}</Button>
+                            }
+                        </FormGroup>
+                        <p className="mt-4 mb-0">{"Don't have account?  "}<Link to={createAccountLink}>{CreateAccount}</Link></p>
+                    </Form>
                 </div>
             </div>
             </div>

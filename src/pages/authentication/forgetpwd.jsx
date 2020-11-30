@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom'
-import {Container,Row,Col,Form,FormGroup,Label,Input,Button} from 'reactstrap' 
+import {Container,Row,Col,Form,FormGroup,Label,Input,Button,Spinner} from 'reactstrap' 
 import { Resend,ResetPassword, SignIn,Send} from "../../constant";
 import { useState } from 'react';
 import {resetpassRequest} from '../../Actions/AuthActions'
@@ -9,7 +9,8 @@ const signInLink = `${process.env.PUBLIC_URL}/login`;
 
 const Forgetpwd = (props) => {
   let history = useHistory();
-    const [email,setEmail] = useState("")
+    const [email,setEmail] = useState("");
+    const [isLoading,setisLoading] = useState(false)
 
     const handleChange = (e) => {
       setEmail(e.target.value)
@@ -17,6 +18,7 @@ const Forgetpwd = (props) => {
 
     const submitHandler = async (e) => {
       e.preventDefault();
+      setisLoading(true)
       let response = await resetpassRequest( email);
       console.log(response);
       if (response.status && response.status === "SUCCESS") {
@@ -24,6 +26,7 @@ const Forgetpwd = (props) => {
         setTimeout(() => { toast.success(history.push(signInLink)); }, 500);
       } else {
         toast.error(response.message);
+        setisLoading(false)
       }
     }
 
@@ -47,7 +50,13 @@ const Forgetpwd = (props) => {
                         </Col>
                         <br /><br />
                         <Col xs="12">
-                          <Button color="primary" className="btn-block m-t-10" type="submit">{Send}</Button>
+                          {/* <Button color="primary" className="btn-block m-t-10" type="submit">{Send}</Button> */}
+                          { isLoading ?             
+                            <Button  type="submit" color="primary" className="btn-block  m-t-10" disabled>
+                                Sending <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true"/>
+                            </Button> : 
+                            <Button  type="submit" color="primary" className="btn-block m-t-10" >{Send}</Button>
+                          }
                         </Col>
                       </Row>
                     </FormGroup>
