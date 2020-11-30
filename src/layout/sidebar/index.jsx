@@ -21,6 +21,7 @@ const Sidebar = (props) => {
     window.addEventListener('resize', handleResize)
     handleResize();
     getDriveStatistics();
+    console.log(sizeStats)
     const currentUrl = window.location.pathname;
     mainmenu.map(items => {
       items.Items.filter((Items) => {
@@ -56,7 +57,7 @@ const Sidebar = (props) => {
 
   const getDriveStatistics = async ()=>{
     let response = await getDriveStats();
-    // console.log(response)
+    console.log(response)
     if(response.status === 'SUCCESS'){
       setsizeStats({
         size: convertsizetoMb(response.data.usedSpace), allocated: convertsizetoMb(response.data.allocated),

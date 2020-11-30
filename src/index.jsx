@@ -60,7 +60,7 @@ const Root = (props) =>  {
           <PrivateRoute exact path={`/app/tempShare`} component={TempShare}></PrivateRoute>
           <PrivateRoute exact path={`/app/tempShareHistory`} component={TempShareHistory}></PrivateRoute>
           <PrivateRoute exact path={`/app/tempShareDrive`} component={TempShareDrive}></PrivateRoute>
-          <Redirect from="/" to="/login" />
+          <Redirect from="/" to="/app/file-manager" />
         </Switch>
         </BrowserRouter>
 

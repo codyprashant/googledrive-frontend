@@ -1,17 +1,21 @@
 import React, { Fragment, useState,useEffect } from 'react';
 import Breadcrumb from '../../../layout/breadcrumb'
 import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Modal, Button,ModalHeader,Media,ModalBody,Label,ModalFooter } from 'reactstrap'
-import { Upload, PlusSquare, Download, Eye, Trash2 } from 'react-feather';
+import { 
+  // Upload, PlusSquare, 
+  Download, Eye, Trash2 } from 'react-feather';
 import { toast } from 'react-toastify'
 import Dropzone from 'react-dropzone-uploader';
 import errorImg from '../../../assets/images/search-not-found.png';
-import {AllFiles,AddNew} from '../../../constant'
+import {AllFiles
+  // ,AddNew
+} from '../../../constant'
 import SweetAlert from 'sweetalert2'
 import {uploadFile, fetchAllFiles, createFolder, deleteFile} from '../../../Actions/Filemanager'
 
 const Filemanager = (props) => {
 
-  const [selectedFile, setSelectedFile] = useState(null)   // Initially, no file is selected  
+  // const [selectedFile, setSelectedFile] = useState(null)   
   const [searchTerm, setSearchTerm] = useState("");
   const [folderName, setfolderName] = useState("");
   const [myfile, setMyFile] = useState([])
@@ -168,14 +172,14 @@ const Filemanager = (props) => {
       )
     })
 
-  const getFile = () => {
-    document.getElementById("upfile").click();
-  }
+  // const getFile = () => {
+  //   document.getElementById("upfile").click();
+  // }
 
-  const onFileChange = event => {
-    setSelectedFile(event.target.files[0]);
-    toast.info("File selected as queue. Please click on Upload button to save")
-  };
+  // const onFileChange = event => {
+  //   setSelectedFile(event.target.files[0]);
+  //   toast.info("File selected as queue. Please click on Upload button to save")
+  // };
 
   const onDropFileChange =  ({ file }, status) => {
     setSelectedDropFile(file);
@@ -205,22 +209,22 @@ const Filemanager = (props) => {
      }
 }
 
-  const onFileUpload = async () => {
-    if (selectedFile !== null) {
-    const data = new FormData();
-    data.append('file', selectedFile);
-    let response = await uploadFile( data);
-    if(response.status === 'SUCCESS'){
-      setMyFile(response.data);
-      toast.success("File Upload Successfully !")
-    }
-    else{
-      toast.error("Smething Went wrong")
-    }
-  } else{
-    toast.error("Plese Select at least one file !")
-  }
-  }
+  // const onFileUpload = async () => {
+  //   if (selectedFile !== null) {
+  //   const data = new FormData();
+  //   data.append('file', selectedFile);
+  //   let response = await uploadFile( data);
+  //   if(response.status === 'SUCCESS'){
+  //     setMyFile(response.data);
+  //     toast.success("File Upload Successfully !")
+  //   }
+  //   else{
+  //     toast.error("Smething Went wrong")
+  //   }
+  // } else{
+  //   toast.error("Plese Select at least one file !")
+  // }
+  // }
 
 
  return (
@@ -272,8 +276,22 @@ const Filemanager = (props) => {
 
               <Card>
                 <CardHeader>
-                  <div className="media">
-                    <Form className="form-inline">
+                  {/* <div className="media"> */}
+                  <Row>
+                  <Col sm="6" >
+                    <h4 className="mb-3">{AllFiles}</h4>
+                    </Col>
+                    <Col sm="6" >
+                    <div className="text-right">
+                      {/* <Form className="d-inline-flex">
+                      <div className="btn btn-primary mr-1" onClick={VaryingContentthreetoggle}> <PlusSquare />{'Add Folder'}</div>
+                        <div className="btn btn-primary" onClick={getFile}> <PlusSquare />{AddNew}</div>
+                        <div style={{ height: "0px", width: "0px", overflow: "hidden" }}>
+                          <input id="upfile" multiple type="file" onChange={(e) => onFileChange(e)} />
+                        </div>
+                      </Form>
+                      <div className="btn btn-outline-primary ml-1" onClick={onFileUpload}><Upload />{"Upload"}</div> */}
+                      <Form className="form-inline">
                       <FormGroup>
                         <i className="fa fa-search"></i>
                         <Input
@@ -284,18 +302,10 @@ const Filemanager = (props) => {
                           placeholder="Search..." />
                       </FormGroup>
                     </Form>
-                    <div className="media-body text-right">
-                      <Form className="d-inline-flex">
-                      {/* <div className="btn btn-primary mr-1" onClick={VaryingContentthreetoggle}> <PlusSquare />{AddFolder}</div> */}
-                        <div className="btn btn-primary" onClick={getFile}> <PlusSquare />{AddNew}</div>
-                        <div style={{ height: "0px", width: "0px", overflow: "hidden" }}>
-                          <input id="upfile" multiple type="file" onChange={(e) => onFileChange(e)} />
-                        </div>
-
-                      </Form>
-                      <div className="btn btn-outline-primary ml-1" onClick={onFileUpload}><Upload />{"Upload"}</div>
                     </div>
-                  </div>
+                    </Col>
+        </Row>
+                  {/* </div> */}
                 </CardHeader>
                 <Card>
                             
@@ -318,7 +328,7 @@ const Filemanager = (props) => {
                 {filelist.length > 0 ?
 
                   <CardBody className="file-manager">
-                    <h4 className="mb-3">{AllFiles}</h4>
+                    
                     <ul className="files">
                       {filelist}
                     </ul>

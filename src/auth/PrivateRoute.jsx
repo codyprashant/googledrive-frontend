@@ -9,10 +9,10 @@ import { CSSTransition,TransitionGroup } from 'react-transition-group'
 const PrivateRoute = ({component: Component, ...rest}) => {
     const jwt_token = () =>{
         if(localStorage.getItem('token') && localStorage.getItem('token') !== null){
-            console.log('authenticated')
+            // console.log('authenticated')
             return true
         } else{
-            console.log('unauthenticated')
+            // console.log('unauthenticated')
             return false
         }
     }
@@ -20,7 +20,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
     return (
         <Route 
         {...rest}
-            render={(props)=> jwt_token ? 
+            render={(props)=> jwt_token() ? 
                 <App>          
                     <TransitionGroup>
                         <CSSTransition timeout={100} unmountOnExit>

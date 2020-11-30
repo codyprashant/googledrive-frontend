@@ -18,7 +18,7 @@ export const signUp = async (email, password, firstName, lastName) => {
 }
 
 export const login = async (email, password) => {
-    console.log(BACKEND_URL)
+    // console.log(BACKEND_URL)
 
     let postData = { email: email, password:password};
     const loginUser = await axios.post(`${BACKEND_URL}/login`, postData)
