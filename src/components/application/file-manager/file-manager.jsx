@@ -154,13 +154,13 @@ const Filemanager = (props) => {
 
   const onDropFileChange =  ({ file }, status) => {
     setSelectedDropFile(file);
-    console.log(status)
-    toast.info("File selected as queue. Please click on Upload button to save")
+    if(status === 'done') toast.info("File selected as queue. Please click on Upload button to save")
   };
 
   const handleSubmit = async (files, allFiles) => {
      allFiles.forEach(f => f.remove())
       if (selectedDropFile !== null) {
+        if(selectedDropFile.size <5000000 ){
        const data = new FormData();
        data.append('file', selectedDropFile);
        let response = await uploadFile( data);
@@ -172,6 +172,9 @@ const Filemanager = (props) => {
        else{
          toast.error("Something Went wrong")
        }
+      }else{
+        toast.error("Select lesser size file");
+      }
      } else{
        toast.error("Plese Select at least one file !")
      }

@@ -16,7 +16,7 @@ const Checkout = (props) => {
 
   const onDropFileChange =  ({ file }, status) => {
     setSelectedDropFile(file);
-    // toast.info("File selected as queue. Please click on Upload button to save")
+    if(status === 'done') toast.info("File selected as queue. Please click on Upload button to save")
   };
 
 
