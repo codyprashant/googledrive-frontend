@@ -1,17 +1,23 @@
 import React, { Fragment, useState,useEffect } from 'react';
 import Breadcrumb from '../../../layout/breadcrumb'
-import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input} from 'reactstrap'
+import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input,Modal,ModalHeader,Media,ModalBody} from 'reactstrap'
 import { Download, Eye, Trash2,RefreshCcw } from 'react-feather';
 import { toast } from 'react-toastify'
 
 import errorImg from '../../../assets/images/search-not-found.png';
 import {AllFiles} from '../../../constant'
+import SweetAlert from 'sweetalert2'
 import {fetchAllFiles, deleteFile,restoreFile } from '../../../Actions/Trashmanager'
+import  MyLoader  from '../../spinner/LoadingSpinner'
 
 const Trashmanager = (props) => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [myfile, setMyFile] = useState([])
+  const [isActive, setisActive] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedViewFile, setselectedViewFile] = useState([]) 
+  const [selectedViewFileName, setselectedViewFileName] = useState('') 
 
 
   // const [selectedDeleteFile, setselectedDeleteFile] = useState([]) 
@@ -21,11 +27,14 @@ const Trashmanager = (props) => {
   },[])
 
   async function getAllData () {
+    setisActive(true)
     const response = await fetchAllFiles();
     if(response.status === 'SUCCESS'){
       setMyFile(response.data);
+      setisActive(false)
     } else{
       toast.error("Something Went wrong")
+      setisActive(false)
     }
   }
 
@@ -76,35 +85,65 @@ const Trashmanager = (props) => {
 
   const deleteMarkedFile = async (itemId) => {
     if(itemId){
+      setisActive(true)
         let response = await deleteFile(itemId);
         if(response.status === 'SUCCESS' && response.status){
           setMyFile(response.data);
           toast.success(`File deleted`);
+          setisActive(false)
         } else{
           toast.error(`File not deleted`);
+          setisActive(false)
         }
     } else{
         toast.error(`Something went wrong. Please try again`);
+        setisActive(false)
     }
   }
 
-  const viewMarkedFile = async (itemId) => {
-    if(itemId){
-      toast.success(`File view clicked`);
-    }
-  }
+  // const viewMarkedFile = async (itemId) => {
+  //   if(itemId){
+  //     toast.success(`File view clicked`);
+  //   }
+  // }
+  
+  const onOpenModal = (fileId) => {
+    myfile.forEach((file, i) => {
+      if (file._id === fileId) {
+        if((file.fileType).includes('image')){
+          setOpen(true);
+            setselectedViewFileName((file.s3FileName).replace(`${file.userId}/uploads/`, ''))
+            setselectedViewFile(file)
+        } else{
+          SweetAlert.fire({
+            title: "File is not Image",
+            text: "Currently, we supports image view functionality only. Please click download icon and then view the file",
+            icon: "info",
+          });
+        }
+      }
+    })
+  };
+
+  const onCloseModal = () => {
+    setOpen(false)
+  };
 
   const restoreMarkedFile = async (itemId) =>{
     if(itemId){
+      setisActive(true)
       let response = await restoreFile(itemId);
       if(response.status ==='SUCCESS' && response.status ){
         setMyFile(response.data);
         toast.success(`File restored Successfully`);
+        setisActive(false)
       } else{
         toast.error(`Restoring File Failed`);
+        setisActive(false)
       }
     } else{
       toast.error(`Something went wrong. Please try again`);
+      setisActive(false)
     }
   }
 
@@ -126,7 +165,7 @@ const Trashmanager = (props) => {
             <Row>
                <Col xl="8" md="8" className="box-col-12">
                  <div className="text-left mt-1 mb-1">
-                   <Eye className="btn-link text-grey mr-2" size={15}  onClick={() => viewMarkedFile(data._id)}/>
+                   <Eye className="btn-link text-grey mr-2" size={15}  onClick={() => onOpenModal(data._id)}/>
                    <Trash2 className="btn-link text-grey mr-3" size={15} onClick={() => deleteMarkedFile(data._id)}/>
                    <RefreshCcw className="btn-link text-grey mr-2" size={15} onClick={() => restoreMarkedFile(data._id)}/>
                  </div>
@@ -145,10 +184,28 @@ const Trashmanager = (props) => {
  return (
     <Fragment>
       <Breadcrumb parent="Apps" title="Trash" />
+      <MyLoader active={isActive}>
       <Container fluid={true}>
         <Row>
           <Col xl="12" md="12" className="box-col-12">
             <div className="file-content">
+            <Modal className="modal-lg modal-dialog-centered product-modal" isOpen={open}>
+                  <ModalBody>
+                    <ModalHeader toggle={onCloseModal}>
+                      <div className="product-box row">
+                        <Row>
+                            <Col lg="12" className="product-img">
+                              <Media className="img-fluid" src={selectedViewFile.publicUrl} alt="" />
+                            </Col>
+                     
+                            <Col lg="12" className=" mt-3">
+                                <h6>{selectedViewFileName} </h6>
+                            </Col>
+                        </Row>
+                      </div>
+                    </ModalHeader>
+                  </ModalBody>
+                </Modal>
               <Card>
                 <CardHeader>
                 <div className="media float-left mt-3 text-danger"><h6>Files will be automatically removed after 30 days of deletion</h6></div>
@@ -185,6 +242,7 @@ const Trashmanager = (props) => {
           </Col>
         </Row>
       </Container>
+      </MyLoader>
     </Fragment>
   );
 }

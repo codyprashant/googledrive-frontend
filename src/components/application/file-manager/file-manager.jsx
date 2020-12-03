@@ -21,6 +21,7 @@ const Filemanager = (props) => {
   const [folderName, setfolderName] = useState("");
   const [myfile, setMyFile] = useState([])
   const [VaryingContentthree, setVaryingContentthree] = useState(false);
+  const getUploadParams = ({ meta }) => { return { url: 'https://httpbin.org/post' } }
   const VaryingContentthreetoggle = () => setVaryingContentthree(!VaryingContentthree);
   const [selectedDropFile, setSelectedDropFile] = useState(null);
   const [open, setOpen] = useState(false);
@@ -103,15 +104,19 @@ const Filemanager = (props) => {
 
   const deleteMarkedFile = async (itemId) => {
     if(itemId){
+      setisActive(true)
         let response = await deleteFile(itemId);
         if(response.status === 'SUCCESS' && response.status){
           setMyFile(response.data);
           toast.success(`File deleted`);
+          setisActive(false)
         } else{
           toast.error(`File not deleted`);
+          setisActive(false)
         }
     } else{
         toast.error(`Something went wrong. Please try again`);
+        setisActive(false)
     }
   }
 
@@ -177,15 +182,6 @@ const Filemanager = (props) => {
       )
     })
 
-  // const getFile = () => {
-  //   document.getElementById("upfile").click();
-  // }
-
-  // const onFileChange = event => {
-  //   setSelectedFile(event.target.files[0]);
-  //   toast.info("File selected as queue. Please click on Upload button to save")
-  // };
-
   const onDropFileChange =  ({ file }, status) => {
     setSelectedDropFile(file);
     if(status === 'done') toast.info("File selected as queue. Please click on Upload button to save")
@@ -218,24 +214,6 @@ const Filemanager = (props) => {
        setisActive(false)
      }
 }
-
-  // const onFileUpload = async () => {
-  //   if (selectedFile !== null) {
-  //   const data = new FormData();
-  //   data.append('file', selectedFile);
-  //   let response = await uploadFile( data);
-  //   if(response.status === 'SUCCESS'){
-  //     setMyFile(response.data);
-  //     toast.success("File Upload Successfully !")
-  //   }
-  //   else{
-  //     toast.error("Smething Went wrong")
-  //   }
-  // } else{
-  //   toast.error("Plese Select at least one file !")
-  // }
-  // }
-
 
  return (
     <Fragment>
@@ -287,22 +265,13 @@ const Filemanager = (props) => {
 
               <Card>
                 <CardHeader>
-                  {/* <div className="media"> */}
                   <Row>
                   <Col sm="6" >
                     <h4 className="mb-3">{AllFiles}</h4>
                     </Col>
                     <Col sm="6" >
                     <div className="text-right">
-                      {/* <Form className="d-inline-flex">
-                      <div className="btn btn-primary mr-1" onClick={VaryingContentthreetoggle}> <PlusSquare />{'Add Folder'}</div>
-                        <div className="btn btn-primary" onClick={getFile}> <PlusSquare />{AddNew}</div>
-                        <div style={{ height: "0px", width: "0px", overflow: "hidden" }}>
-                          <input id="upfile" multiple type="file" onChange={(e) => onFileChange(e)} />
-                        </div>
-                      </Form>
-                      <div className="btn btn-outline-primary ml-1" onClick={onFileUpload}><Upload />{"Upload"}</div> */}
-                      <Form className="form-inline">
+                        <Form className="form-inline">
                       <FormGroup>
                         <i className="fa fa-search"></i>
                         <Input
@@ -324,12 +293,18 @@ const Filemanager = (props) => {
                                 <Form>
                                     <div className="dz-message needsclick">
                                        <Dropzone
+                                            // onChangeStatus={onDropFileChange}
+                                            // onSubmit={handleSubmit}
+                                            // minFiles={1}
+                                            // maxFiles={1}
+                                            // inputContent="Drop files here or click to upload"
+                                            // inputWithFilesContent={"Drop files here or click to upload"}
+                                            getUploadParams={getUploadParams}
                                             onChangeStatus={onDropFileChange}
                                             onSubmit={handleSubmit}
-                                            minFiles={1}
                                             maxFiles={1}
+                                            maxSize = {1}
                                             inputContent="Drop files here or click to upload"
-                                            inputWithFilesContent={"Drop files here or click to upload"}
                                             
                                         />
                                     </div>
