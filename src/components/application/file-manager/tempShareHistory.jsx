@@ -42,7 +42,7 @@ const TempShareHistory = (props) => {
         let link = '';
         let fontcolor = '';
         let downLink = '';
-       if(((diffTime/3600000).toFixed(0)) < 48){
+       if(((diffTime/3600000).toFixed(0)) < 48 || data.expired === 0){
             link = 'Download Link';
             fontcolor = 'success';
             downLink = data.publicUrl

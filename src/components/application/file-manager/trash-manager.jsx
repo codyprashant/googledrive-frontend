@@ -208,7 +208,7 @@ const Trashmanager = (props) => {
                 </Modal>
               <Card>
                 <CardHeader>
-                <div className="media float-left mt-3 text-danger"><h6>Files will be automatically removed after 30 days of deletion</h6></div>
+                <div className="media float-left mt-3 text-danger"><h6>Files will be automatically removed after 72 hours of deletion</h6></div>
                   <div className="media float-right">
                     <Form className="form-inline">
                       <FormGroup>
